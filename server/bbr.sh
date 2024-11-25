@@ -2,8 +2,8 @@
 GIT_CMD="https://github.com/errorcode86/bbrplus/raw/master/Debian9/x86_64/"
 startbbr() {
     if [[ $(echo 4.14.129-bbrplus | awk -F'.' '{print $1}') -ge "5" ]]; then
-	    echo "net.core.default_qdisc=cake" >> /etc/sysctl.conf
-	    echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
+	echo "net.core.default_qdisc=cake" >> /etc/sysctl.conf
+	echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_all = 0" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_broadcasts = 1" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_ignore_bogus_error_responses = 1" >>/etc/sysctl.conf
@@ -28,8 +28,8 @@ startbbr() {
         echo "net.netfilter.nf_conntrack_tcp_timeout_established=600" >>/etc/sysctl.conf
         echo "net.netfilter.nf_conntrack_tcp_timeout_fin_wait=10" >>/etc/sysctl.conf
     else
-	    echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
-	    echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
+	echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
+	echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_all = 0" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_echo_ignore_broadcasts = 1" >>/etc/sysctl.conf
         echo "net.ipv4.icmp_ignore_bogus_error_responses = 1" >>/etc/sysctl.conf
