@@ -202,14 +202,14 @@ systemctl enable kvmswap >/dev/null 2>&1
 sleep 1
 mkdir -p /root/.config/rclone/
 cat > /root/.config/rclone/rclone.conf <<EOF
-[cendrawasih]
+[sonzaix]
 type = drive
 scope = drive
 team_drive = 0AL4IDbuID-syUk9PVA
-service_account_file = /root/.config/rclone/cendrawasih.json
+service_account_file = /root/.config/rclone/sonzaix.json
 root_folder_id = 1YmZ7pN5mPaNuwy5O-qd95BT1NhrKrE2p
 EOF
-cat > /root/.config/rclone/cendrawasih.json <<EOF
+cat > /root/.config/rclone/sonzaix.json <<EOF
 {
   "type": "service_account",
   "project_id": "kvm-provisioning",

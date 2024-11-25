@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://github.com/manssizz/scriptvps"><img src="https://github.com/Manssizz/scriptvps/raw/master/assets/logo.png" alt="LOGO"></a>
+  <a href="https://github.com/SonzaiEkkusu/scriptvps"><img src="https://github.com/SonzaiEkkusu/scriptvps/raw/master/assets/logo.png" alt="LOGO"></a>
 </h1>
 
 ### PERHATIAN
@@ -9,7 +9,7 @@
 - Jika mendapatkan error pada status servis dalam jangka panjang, bisa restart servis yang dead.
 
 ### INSTALL SCRIPT
-<pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/Manssizz/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
+<pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/SonzaiEkkusu/scriptvps/master/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 
 
 ### TESTED ON OS 

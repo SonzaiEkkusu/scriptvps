@@ -20,16 +20,16 @@ TANGGAL=$(date '+%Y-%m-%d')
 TIMES="10"
 NAMES=$(whoami)
 IMP="wget -q -O"    
-CHATID="1036440597"
+CHATID="679008122"
 LOCAL_DATE="/usr/bin/"
 MYIP=$(wget -qO- ipinfo.io/ip)
 ISP=$(wget -qO- ipinfo.io/org)
 CITY=$(curl -s ipinfo.io/city)
 TIME=$(date +'%Y-%m-%d %H:%M:%S')
 RAMMS=$(free -m | awk 'NR==2 {print $2}')
-REPO="https://raw.githubusercontent.com/manssizz/scriptvps/master/"
+REPO="https://raw.githubusercontent.com/SonzaiEkkusu/scriptvps/master/"
 APT="apt-get -y install "
-domain=$(cat /etc/cendrawasih/domain)
+domain=$(cat /etc/sonzaix/domain)
 start=$(date +%s)
 secs_to_human() {
     echo "Installation time : $((${1} / 3600)) hours $(((${1} / 60) % 60)) minute's $((${1} % 60)) seconds"
@@ -77,8 +77,8 @@ function first_setup(){
     wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
     wget -q -O /etc/ipserver "${REPO}server/ipserver" && bash /etc/ipserver >/dev/null 2>&1
     chmod 644 /etc/ssh/sshd_config
-    useradd -M cendrawasih
-    usermod -aG sudo,cendrawasih cendrawasih 
+    useradd -M sonzaix
+    usermod -aG sudo,sonzaix sonzaix 
 
     echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
@@ -116,15 +116,15 @@ function dir_xray() {
     print_install "Membuat direktori xray"
     mkdir -p /etc/xray
     mkdir -p /var/log/xray/
-    mkdir -p /etc/cendrawasih/{database,public_html,theme}
-    touch /etc/cendrawasih/install.log
+    mkdir -p /etc/sonzaix/{database,public_html,theme}
+    touch /etc/sonzaix/install.log
     touch /var/log/xray/{access.log,error.log}
     chmod 777 /var/log/xray/*.log
-    touch /etc/cendrawasih/database/vmess/vmess.db
-    touch /etc/cendrawasih/database/vless/vless.db
-    touch /etc/cendrawasih/database/trojan/trojan.db
-    touch /etc/cendrawasih/database/ssh/ssh.db
-    touch /etc/cendrawasih/database/shadowsocks/shadowsocks.db
+    touch /etc/sonzaix/database/vmess/vmess.db
+    touch /etc/sonzaix/database/vless/vless.db
+    touch /etc/sonzaix/database/trojan/trojan.db
+    touch /etc/sonzaix/database/ssh/ssh.db
+    touch /etc/sonzaix/database/shadowsocks/shadowsocks.db
     clear
 }
 
@@ -133,14 +133,14 @@ function add_domain() {
     echo "`cat /etc/banner`"
     read -rp "Input Your Domain For This Server:" -e SUB_DOMAIN
     echo "Host : $SUB_DOMAIN"
-    echo $SUB_DOMAIN > /etc/cendrawasih/domain
-    cp /etc/cendrawasih/domain /etc/xray/domain
+    echo $SUB_DOMAIN > /etc/sonzaix/domain
+    cp /etc/sonzaix/domain /etc/xray/domain
 }
 
 ### Pasang SSL
 function pasang_ssl() {
     print_install "Memasang SSL pada domain"
-    domain=$(cat /etc/cendrawasih/domain)
+    domain=$(cat /etc/sonzaix/domain)
     STOPWEBSERVER=$(lsof -i:80 | cut -d' ' -f1 | awk 'NR==2 {print $1}')
     rm -rf /root/.acme.sh
     mkdir /root/.acme.sh
@@ -174,8 +174,8 @@ function install_websocket(){
 ### Install Xray
 function install_xray(){
     domainSock_dir="/run/xray";! [ -d $domainSock_dir ] && mkdir  $domainSock_dir
-    chown cendrawasih.cendrawasih $domainSock_dir
-    chown cendrawasih.cendrawasih /var/log/xray
+    chown sonzaix.sonzaix $domainSock_dir
+    chown sonzaix.sonzaix /var/log/xray
     print_install "Memasang modul Xray terbaru"
     curl -s ipinfo.io/city >> /etc/xray/city
     curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/isp
@@ -198,7 +198,7 @@ Documentation=https://github.com/xtls
 After=network.target nss-lookup.target
 
 [Service]
-User=cendrawasih
+User=sonzaix
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
@@ -261,7 +261,7 @@ function install_slowdns(){
     print_install "Memasang modul SlowDNS Server"
     wget -q -O /tmp/nameserver "${REPO}slowdns/nameserver" >/dev/null 2>&1
     chmod +x /tmp/nameserver
-    bash /tmp/nameserver | tee /etc/cendrawasih/install.log
+    bash /tmp/nameserver | tee /etc/sonzaix/install.log
     print_success "SlowDNS"
 }
 
@@ -295,7 +295,7 @@ chmod 644 /etc/stunnel/stunnel.conf
 
         openssl genrsa -out key.pem 2048
         openssl req -new -x509 -key key.pem -out cert.pem -days 1095 \
-        -subj "/C=ID/ST=Jakarta/L=Jakarta/O=Cendrawasih/OU=CendrawasihTunnel/CN=Cendrawasih/emailAddress=taibabi@cendrawasih.com"
+        -subj "/C=ID/ST=Jakarta/L=Jakarta/O=SonzaiX/OU=SonzaixTunnel/CN=Sonzaix/emailAddress=sonzaixmail@gmail.com"
         cat key.pem cert.pem >> /etc/stunnel/stunnel.pem
         chmod 600 /etc/stunnel/stunnel.pem
 
@@ -315,10 +315,10 @@ function pasang_rclone() {
 ### Ambil Konfig
 function download_config(){
     print_install "Memasang konfigurasi paket konfigurasi"
-    wget -O /etc/nginx/conf.d/cendrawasih.conf "${REPO}config/cendrawasih.conf" >/dev/null 2>&1
-    sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/cendrawasih.conf
+    wget -O /etc/nginx/conf.d/sonzaix.conf "${REPO}config/sonzaix.conf" >/dev/null 2>&1
+    sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/sonzaix.conf
     wget -O /etc/nginx/nginx.conf "${REPO}config/nginx.conf" >/dev/null 2>&1
-    wget -O /etc/cendrawasih/.version "${REPO}version" >/dev/null 2>&1
+    wget -O /etc/sonzaix/.version "${REPO}version" >/dev/null 2>&1
 
     wget -q -O /etc/squid/squid.conf "${REPO}config/squid.conf" >/dev/null 2>&1
     echo "visible_hostname $(cat /etc/xray/domain)" /etc/squid/squid.conf
@@ -346,7 +346,7 @@ function download_config(){
     mkdir /tmp/tema
     7z e  /tmp/tema-master.zip -o/tmp/tema/ >/dev/null 2>&1
     chmod +x /tmp/tema/*
-    mv /tmp/tema/* /etc/cendrawasih/theme/    
+    mv /tmp/tema/* /etc/sonzaix/theme/    
 
     # > Vnstat
     vnstat -u -i $NET
@@ -454,8 +454,8 @@ function tambahan(){
     tuned-adm profile network-latency
 
     # > Homepage
-    wget -O /etc/cendrawasih/public_html/index.html ${REPO}website/index.html >/dev/null 2>&1
-    wget -O /etc/cendrawasih/public_html/style.css ${REPO}website/style.css >/dev/null 2>&1
+    wget -O /etc/sonzaix/public_html/index.html ${REPO}website/index.html >/dev/null 2>&1
+    wget -O /etc/sonzaix/public_html/style.css ${REPO}website/style.css >/dev/null 2>&1
 
     cat >/etc/msmtprc <<EOF
 defaults
@@ -475,13 +475,13 @@ EOF
 
 cat <<EOT > /etc/motd
 ========================================================
-                Cendrawasih Tunnel
+                Sonzai X シ Tunnel
 Dengan menggunakan script ini, anda menyetujui jika:
 - Script ini tidak diperjual belikan
 - Script ini tidak digunakan untuk aktifitas ilegal
 - Script ini tidak dienkripsi
 ========================================================
-                    (c) 2023
+                    (c) 2024
 EOT
 
 chgrp mail /etc/msmtprc
@@ -515,14 +515,14 @@ chmod 644 /root/.profile
 
 
 ########## SETUP FROM HERE ##########
-#####       Cendrawasih         #####
+#####       Sonzai X シ         #####
 #####################################
 echo "INSTALLING SCRIPT..."
 
 cat >/root/tmp <<-END
 #!/bin/bash
 #vps
-### CendrawasihTunnel $TANGGAL $MYIP
+### SonzaixTunnel $TANGGAL $MYIP
 END
 
 function enable_services(){
@@ -555,53 +555,53 @@ function install_all() {
     # dir_xray
     # add_domain
     pasang_ssl 
-    install_xray >> /etc/cendrawasih/install.log
-    install_stunnel >> /etc/cendrawasih/install.log
-    install_websocket >> /etc/cendrawasih/install.log
-    install_ovpn >> /etc/cendrawasih/install.log
-    install_slowdns >> /etc/cendrawasih/install.log
-    download_config >> /etc/cendrawasih/install.log
-    enable_services >> /etc/cendrawasih/install.log
-    tambahan >> /etc/cendrawasih/install.log
-    pasang_rclone >> /etc/cendrawasih/install.log
+    install_xray >> /etc/sonzaix/install.log
+    install_stunnel >> /etc/sonzaix/install.log
+    install_websocket >> /etc/sonzaix/install.log
+    install_ovpn >> /etc/sonzaix/install.log
+    install_slowdns >> /etc/sonzaix/install.log
+    download_config >> /etc/sonzaix/install.log
+    enable_services >> /etc/sonzaix/install.log
+    tambahan >> /etc/sonzaix/install.log
+    pasang_rclone >> /etc/sonzaix/install.log
 }
 
 function finish(){
     sed -i "s/xxx/${MYIP}/g" /etc/squid/squid.conf
-    chown -R cendrawasih:cendrawasih /etc/msmtprc
+    chown -R sonzaix:sonzaix /etc/msmtprc
 
 
     # > Bersihkan History
     alias bash2="bash --init-file <(echo '. ~/.bashrc; unset HISTFILE')"
     clear
-    echo "    ┌─────────────────────────────────────────────────────┐" | tee -a /etc/cendrawasih/install.log
-    echo "    │       >>> Service & Port                            │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - OpenSSH                 : 22                    │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - Dropbear                : 109, 143              │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - Dropbear Websocket      : 443, 109, 39          │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - SSH Websocket SSL       : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - SSH Websocket           : 80                    │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - OpenVPN SSL             : 443, 1194             │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - OpenVPN Websocket SSL   : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - OpenVPN TCP             : 1194                  │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - OpenVPN UDP             : 2200                  │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - Nginx Webserver         : 81                    │" | tee -a /etc/cendrawasih/install.log
-#    echo "    │   - Haproxy Loadbalancer    : 443, 80               │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - DNS Server              : 443, 53               │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - DNS Client              : 443, 88               │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - XRAY DNS (SLOWDNS)      : 443, 80, 53           │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - XRAY Vmess TLS          : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - XRAY Vmess gRPC         : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - XRAY Vmess None TLS     : 80                    │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - XRAY Vless TLS          : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - XRAY Vless gRPC         : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - XRAY Vless None TLS     : 80                    │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - Trojan gRPC             : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - Trojan WS               : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - Shadowsocks WS          : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    │   - Shadowsocks gRPC        : 443                   │" | tee -a /etc/cendrawasih/install.log
-    echo "    └─────────────────────────────────────────────────────┘" | tee -a /etc/cendrawasih/install.log
+    echo "    ┌─────────────────────────────────────────────────────┐" | tee -a /etc/sonzaix/install.log
+    echo "    │       >>> Service & Port                            │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - OpenSSH                 : 22                    │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - Dropbear                : 109, 143              │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - Dropbear Websocket      : 443, 109, 39          │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - SSH Websocket SSL       : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - SSH Websocket           : 80                    │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - OpenVPN SSL             : 443, 1194             │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - OpenVPN Websocket SSL   : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - OpenVPN TCP             : 1194                  │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - OpenVPN UDP             : 2200                  │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - Nginx Webserver         : 81                    │" | tee -a /etc/sonzaix/install.log
+#    echo "    │   - Haproxy Loadbalancer    : 443, 80               │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - DNS Server              : 443, 53               │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - DNS Client              : 443, 88               │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - XRAY DNS (SLOWDNS)      : 443, 80, 53           │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - XRAY Vmess TLS          : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - XRAY Vmess gRPC         : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - XRAY Vmess None TLS     : 80                    │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - XRAY Vless TLS          : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - XRAY Vless gRPC         : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - XRAY Vless None TLS     : 80                    │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - Trojan gRPC             : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - Trojan WS               : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - Shadowsocks WS          : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    │   - Shadowsocks gRPC        : 443                   │" | tee -a /etc/sonzaix/install.log
+    echo "    └─────────────────────────────────────────────────────┘" | tee -a /etc/sonzaix/install.log
     echo "    ┌─────────────────────────────────────────────────────┐"
     echo "    │                                                     │"
     echo "    │      >>> Server Information & Other Features        │"
